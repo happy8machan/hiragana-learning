@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>あいうえお ひろば - たのしい ひらがな あぷり</title>
+  <meta name="description" content="4さいのおこさまが、はじめてひらがなをまなぶための、たのしくてなおかつちょっかんてきなウェブあぷりです。おととなぞりがき、クイズであそぼう！">
+  
+  <!-- Google Fonts: 読みやすく温かみのある日本語丸文字と、ポップな英数字用フォント -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
+  <!-- スタイルシートの読み込み -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- PWA マニフェスト -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff8a00">
+  <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body>
+
+  <!-- 音声合成の初期化を促すスタート画面（ブラウザの自動再生ポリシー対策） -->
+  <div id="start-overlay" class="start-overlay">
+    <div class="start-card">
+      <h1 class="start-title">あいうえお ひろば</h1>
+      <p class="start-subtitle">ひらがなで たのしく あそぼう！</p>
+      <div class="start-mascot">🐣</div>
+      <button id="btn-start-app" class="btn-start">はじめる！</button>
+    </div>
+  </div>
+
+  <!-- アプリのメインコンテナ -->
+  <div id="app-container" class="app-container hidden">
+    
+    <!-- ふわふわ浮かぶ雲の背景エフェクト -->
+    <div class="cloud-background">
+      <div class="cloud cloud-1">☁️</div>
+      <div class="cloud cloud-2">☁️</div>
+      <div class="cloud cloud-3">☁️</div>
+      <div class="cloud cloud-4">☁️</div>
+    </div>
+
+    <!-- ヘッダー -->
+    <header class="app-header">
+      <div class="header-logo" id="header-logo">
+        <span class="logo-emoji">🌈</span>
+        <h1 class="logo-text">あいうえお ひろば</h1>
+      </div>
+      <div class="header-controls">
+        <button id="btn-sound-toggle" class="btn-icon" aria-label="おとをきりかえる" title="おとの オン/オフ">
+          <span class="sound-icon-on">🔊</span>
+          <span class="sound-icon-off hidden">🔇</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- モード切り替えタブ -->
+    <nav class="app-nav">
+      <button id="btn-mode-chart" class="nav-tab active" data-mode="chart">
+        <span class="tab-icon">📇</span>
+        <span class="tab-label">ひょう</span>
+      </button>
+      <button id="btn-mode-trace" class="nav-tab" data-mode="trace">
+        <span class="tab-icon">✏️</span>
+        <span class="tab-label">なぞりがき</span>
+      </button>
+      <button id="btn-mode-quiz" class="nav-tab" data-mode="quiz">
+        <span class="tab-icon">🎮</span>
+        <span class="tab-label">えあわせ</span>
+      </button>
+    </nav>
+
+    <!-- メインコンテンツ領域 -->
+    <main class="app-main">
+
+      <!-- ① 五十音表ビュー -->
+      <section id="view-chart" class="view-section active">
+        <div class="chart-sub-nav">
+          <button id="btn-sub-seion" class="sub-tab active" data-chart-type="seion">せいおん (あ・い・う)</button>
+          <button id="btn-sub-dakuon" class="sub-tab" data-chart-type="dakuon">だくおん (が・ぱ)</button>
+          <button id="btn-sub-youon" class="sub-tab" data-chart-type="youon">ようおん (きゃ・りゅ)</button>
+        </div>
+        
+        <div id="chart-grid-container" class="chart-grid-container">
+          <!-- JSでグリッドが動的生成されます -->
+        </div>
+      </section>
+
+      <!-- ② なぞりがきビュー -->
+      <section id="view-trace" class="view-section">
+        <!-- ひらがな選択カルーセル -->
+        <div class="trace-selector-wrapper">
+          <button id="btn-trace-scroll-left" class="btn-scroll">◀</button>
+          <div id="trace-char-selector" class="trace-char-selector">
+            <!-- JSでひらがな一覧を生成します -->
+          </div>
+          <button id="btn-trace-scroll-right" class="btn-scroll">▶</button>
+        </div>
+
+        <div class="trace-board-container">
+          <div class="trace-canvas-frame">
+            <!-- キャンバス本体 -->
+            <canvas id="trace-canvas" width="400" height="400"></canvas>
+            <!-- お手本アニメーション・ガイドのオーバレイ -->
+            <div id="trace-overlay" class="trace-overlay"></div>
+            <!-- 指マークの案内アニメーション -->
+            <div id="trace-finger-guide" class="trace-finger-guide hidden">👆</div>
+          </div>
+
+          <div class="trace-controls">
+            <div class="current-char-info">
+              <span id="trace-current-emoji" class="info-emoji">🍓</span>
+              <span id="trace-current-word" class="info-word">いちご</span>
+            </div>
+            <div class="control-buttons">
+              <button id="btn-trace-sound" class="btn-action btn-speak">🔊 おとをきく</button>
+              <button id="btn-trace-clear" class="btn-action btn-clear">🧹 もういっかい</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ③ えあわせクイズビュー -->
+      <section id="view-quiz" class="view-section">
+        <div class="quiz-container">
+          <div class="quiz-header">
+            <div class="quiz-score">
+              <span>おはな：</span>
+              <span id="quiz-flower-count" class="flower-count">0</span>
+              <span class="flower-emoji">🌸</span>
+            </div>
+            <div class="quiz-streak">
+              <span id="quiz-streak-stars"></span>
+            </div>
+          </div>
+
+          <div class="quiz-question-box">
+            <button id="btn-quiz-speak-question" class="btn-speak-question" aria-label="もんだいを聞く">
+              🔊 もんだいを聞く
+            </button>
+            <h2 id="quiz-question-text" class="quiz-question-text">「あ」はどれかな？</h2>
+          </div>
+
+          <div id="quiz-options-container" class="quiz-options-container">
+            <!-- クイズの選択肢がここに動的生成されます -->
+          </div>
+
+          <!-- ご褒美のお庭 -->
+          <div class="quiz-garden-wrapper">
+            <p class="garden-title">みんなのおにわ（せいかいすると おはなが さくよ！）</p>
+            <div id="quiz-garden" class="quiz-garden">
+              <!-- 正解するごとにお花が植えられます -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- キャラクター詳細ポップアップ（五十音表用） -->
+    <div id="char-modal" class="modal hidden">
+      <div class="modal-overlay" id="char-modal-overlay"></div>
+      <div class="modal-content">
+        <button id="btn-modal-close" class="btn-modal-close">✖</button>
+        <div class="modal-body">
+          <div class="modal-left">
+            <div class="modal-char-display" id="modal-char">あ</div>
+            <button id="btn-modal-speak" class="btn-modal-speak">🔊 おとをきく</button>
+          </div>
+          <div class="modal-right">
+            <div class="modal-illustration" id="modal-emoji">🦆</div>
+            <div class="modal-word" id="modal-word">あひる</div>
+            <button id="btn-modal-go-trace" class="btn-modal-action">✍️ なぞってみよう！</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- お祝い用全画面オーバーレイ（なぞりがき成功時など） -->
+    <div id="celebration-overlay" class="celebration-overlay hidden">
+      <div class="celebration-card">
+        <div class="celebration-stars">🌟✨👑✨🌟</div>
+        <div class="celebration-title">できた！！！</div>
+        <div class="celebration-char" id="celebration-char-display">あ</div>
+        <div class="celebration-badge">💮 はなまる！</div>
+        <button id="btn-celebration-close" class="btn-celebration-close">つぎへ すすむ 🚀</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JavaScriptファイルの読み込み -->
+  <script src="stroke-data.js"></script>
+  <script src="app.js"></script>
+  
+  <!-- サービスワーカーの登録 (PWA用) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => {
+            console.log('Service Worker registered successfully:', reg.scope);
+          })
+          .catch((err) => {
+            console.log('Service Worker registration failed:', err);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
