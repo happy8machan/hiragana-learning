@@ -1194,7 +1194,22 @@ function handleQuizAnswer(selected, buttonEl) {
     plantFlowerInGarden();
     
     // 正解ボイス
-    const praises = ['当たり！すごいすごい！', '正解！やったね！', '大正解！天才！', '当たり！その調子！'];
+    const praises = [
+      '当たり！すごいすごい！',
+      '正解！やったね！',
+      '大正解！天才！',
+      '当たり！その調子！',
+      'ピンポン！すごい、大正解！',
+      '素晴らしい！よくできました！',
+      'やったー！大正解！',
+      'すごいすごい！おめでとう！',
+      '正解！やるねー！',
+      '当たり！かっこいい！',
+      'ピンポン！やったね、嬉しいな！',
+      'すごい！大正解！拍手！',
+      '正解！素晴らしい！',
+      'やったね！大成功！'
+    ];
     const voicePraise = praises[Math.floor(Math.random() * praises.length)];
     
     // 選択肢を全部無効化
