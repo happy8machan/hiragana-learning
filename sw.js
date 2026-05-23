@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hiragana-learning-v1';
+const CACHE_NAME = 'hiragana-learning-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -7,7 +7,19 @@ const ASSETS = [
   './stroke-data.js',
   './icon-192.png',
   './icon-512.png',
-  'https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Zen+Maru+Gothic:wght@500;700;900&display=swap'
+  './images/kanata.png',
+  './images/eki.png',
+  './images/sunflower.png',
+  './images/softcream.png',
+  './images/hanabi.png',
+  './images/yama.png',
+  './images/nori.png',
+  './images/hoikuen.png',
+  './images/fumikiri.png',
+  './images/kotoha.png',
+  './images/maguro.png',
+  './images/tsuki.png',
+  'https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap'
 ];
 
 // インストール時にキャッシュ
