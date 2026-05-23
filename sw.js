@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hiragana-learning-v3';
+const CACHE_NAME = 'hiragana-learning-v4';
 const ASSETS = [
   './',
   './index.html',
