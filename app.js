@@ -291,8 +291,65 @@ function speak(text, callback) {
   window.speechSynthesis.speak(utterance);
 }
 
+let passwordBuffer = '';
+
 // --- 画面初期化とイベント設定 ---
 document.addEventListener('DOMContentLoaded', () => {
+  // --- パスワードロックのキーパッド処理 ---
+  const passwordOverlay = document.getElementById('password-overlay');
+  const passwordDisplay = document.getElementById('password-display');
+  const passwordError = document.getElementById('password-error');
+  const passwordDots = passwordDisplay.querySelectorAll('.password-dot');
+  
+  const updatePasswordDisplay = () => {
+    passwordDots.forEach((dot, idx) => {
+      dot.classList.toggle('filled', idx < passwordBuffer.length);
+    });
+  };
+  
+  const checkPassword = () => {
+    if (passwordBuffer === '0210') {
+      playSuccessChime();
+      passwordOverlay.classList.add('hidden');
+    } else {
+      playWrongSound();
+      passwordError.classList.remove('hidden');
+      passwordError.style.animation = 'none';
+      passwordError.offsetHeight; // リフロー
+      passwordError.style.animation = 'shake 0.4s ease';
+      
+      setTimeout(() => {
+        passwordBuffer = '';
+        updatePasswordDisplay();
+        passwordError.classList.add('hidden');
+      }, 1200);
+    }
+  };
+
+  const keypadKeys = document.querySelectorAll('.btn-key');
+  keypadKeys.forEach(key => {
+    key.addEventListener('click', (e) => {
+      const val = e.currentTarget.getAttribute('data-val');
+      playClickSound();
+      
+      if (val === 'clear') {
+        passwordBuffer = '';
+        updatePasswordDisplay();
+      } else if (val === 'ok') {
+        checkPassword();
+      } else {
+        if (passwordBuffer.length < 4) {
+          passwordBuffer += val;
+          updatePasswordDisplay();
+          
+          if (passwordBuffer.length === 4) {
+            setTimeout(checkPassword, 250);
+          }
+        }
+      }
+    });
+  });
+
   // はじめるボタン
   document.getElementById('btn-start-app').addEventListener('click', () => {
     initAudioContext();
@@ -309,6 +366,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // キャンバス初期化
     initTraceCanvas();
   });
+
+  // クイズ問題文表示トグル
+  const chkShowQuestion = document.getElementById('chk-show-question');
+  if (chkShowQuestion) {
+    chkShowQuestion.addEventListener('change', (e) => {
+      playClickSound();
+      const qText = document.getElementById('quiz-question-text');
+      if (currentQuestion) {
+        if (e.target.checked) {
+          qText.innerHTML = currentQuestion.questionText;
+        } else {
+          qText.innerText = '👂 (みみで きいてね！)';
+        }
+      }
+    });
+  }
+
+  // クイズ休憩のつづけるボタン
+  const btnQuizBreakContinue = document.getElementById('btn-quiz-break-continue');
+  if (btnQuizBreakContinue) {
+    btnQuizBreakContinue.addEventListener('click', () => {
+      playClickSound();
+      document.getElementById('quiz-break-overlay').classList.add('hidden');
+      startNewQuiz();
+    });
+  }
   
   // ナビゲーションの切り替え
   const navTabs = document.querySelectorAll('.nav-tab');
@@ -494,9 +577,13 @@ function renderChart(type) {
       card.style.gridRow = item.row;
       
       const data = hiraganaData[item.char] || { emoji: '❓', word: '' };
+      const mediaHtml = data.image 
+        ? `<img src="${data.image}" alt="${data.word}">`
+        : data.emoji;
+      
       card.innerHTML = `
         <span class="card-letter">${item.char}</span>
-        <span class="card-emoji">${data.emoji}</span>
+        <span class="card-emoji">${mediaHtml}</span>
         <span class="card-word">${data.word}</span>
       `;
       card.addEventListener('click', () => openCharDetail(item.char));
@@ -512,9 +599,13 @@ function renderChart(type) {
       card.style.gridRow = item.row;
       
       const data = dakuonData[item.char] || { emoji: '❓', word: '' };
+      const mediaHtml = data.image 
+        ? `<img src="${data.image}" alt="${data.word}">`
+        : data.emoji;
+
       card.innerHTML = `
         <span class="card-letter">${item.char}</span>
-        <span class="card-emoji">${data.emoji}</span>
+        <span class="card-emoji">${mediaHtml}</span>
         <span class="card-word">${data.word}</span>
       `;
       card.addEventListener('click', () => openCharDetail(item.char));
@@ -530,9 +621,13 @@ function renderChart(type) {
       card.style.gridRow = item.row;
       
       const data = youonData[item.char] || { emoji: '❓', word: '' };
+      const mediaHtml = data.image 
+        ? `<img src="${data.image}" alt="${data.word}">`
+        : data.emoji;
+
       card.innerHTML = `
         <span class="card-letter" style="font-size: 1.6rem;">${item.char}</span>
-        <span class="card-emoji">${data.emoji}</span>
+        <span class="card-emoji">${mediaHtml}</span>
         <span class="card-word">${data.word}</span>
       `;
       card.addEventListener('click', () => openCharDetail(item.char));
@@ -555,7 +650,11 @@ function openCharDetail(char) {
   const data = getCharWordData(char);
   
   modalChar.innerText = char;
-  modalEmoji.innerText = data.emoji;
+  if (data.image) {
+    modalEmoji.innerHTML = `<img src="${data.image}" alt="${data.word}">`;
+  } else {
+    modalEmoji.innerText = data.emoji;
+  }
   modalWord.innerText = data.word;
   
   // 濁音・拗音はなぞり書きデータがないため、なぞり書きへ行くボタンを非表示にする
@@ -612,7 +711,12 @@ function selectTraceChar(char) {
   
   // イラスト・言葉の更新
   const data = hiraganaData[char];
-  document.getElementById('trace-current-emoji').innerText = data.emoji;
+  const emojiEl = document.getElementById('trace-current-emoji');
+  if (data.image) {
+    emojiEl.innerHTML = `<img src="${data.image}" alt="${data.word}">`;
+  } else {
+    emojiEl.innerText = data.emoji;
+  }
   document.getElementById('trace-current-word').innerText = data.word;
   
   // ボード初期化
@@ -993,13 +1097,18 @@ function startNewQuiz() {
   let questionText = '';
   let voicePrompt = '';
   
+  const correctMedia = correctData.image 
+    ? `<img src="${correctData.image}" alt="${correctData.word}" style="width: 32px; height: 32px; vertical-align: middle; border-radius: 4px; display: inline-block; margin-right: 5px;">`
+    : correctData.emoji;
+
   if (quizType === 0) {
     // 音声から文字
     questionText = `「${correctChar}」は どれかな？`;
     voicePrompt = `『${correctChar}』はどれかな？`;
   } else if (quizType === 1) {
     // 絵・単語から頭文字
-    questionText = `「${correctData.emoji} ${correctData.word}」の 「${correctChar}」は どれかな？`;
+    const mediaPart = correctData.image ? correctMedia : correctData.emoji;
+    questionText = `「${mediaPart} ${correctData.word}」の 「${correctChar}」は どれかな？`;
     voicePrompt = `『${correctData.pronounce || correctData.word}』の、『${correctChar}』はどれかな？`;
   } else {
     // 文字から絵
@@ -1011,10 +1120,18 @@ function startNewQuiz() {
     type: quizType,
     correctChar: correctChar,
     voicePrompt: voicePrompt,
+    questionText: questionText,
     choices: choices
   };
   
-  document.getElementById('quiz-question-text').innerText = questionText;
+  // トグルスイッチの状態に応じてテキストを出し分ける
+  const showQuestionChk = document.getElementById('chk-show-question');
+  const qTextEl = document.getElementById('quiz-question-text');
+  if (showQuestionChk && !showQuestionChk.checked) {
+    qTextEl.innerText = '👂 (みみで きいてね！)';
+  } else {
+    qTextEl.innerHTML = questionText;
+  }
   
   // 選択肢ボタンの生成
   choices.forEach(char => {
@@ -1024,9 +1141,12 @@ function startNewQuiz() {
     const charData = hiraganaData[char];
     
     if (quizType === 2) {
-      // 文字から絵：ボタンに絵文字と言葉を乗せる
+      // 文字から絵：ボタンに画像/絵文字と言葉を乗せる
+      const optionMedia = charData.image 
+        ? `<img src="${charData.image}" alt="${charData.word}">`
+        : charData.emoji;
       btn.innerHTML = `
-        <span class="option-emoji">${charData.emoji}</span>
+        <span class="option-emoji">${optionMedia}</span>
         <span class="option-word">${charData.word}</span>
       `;
     } else {
@@ -1054,6 +1174,12 @@ function handleQuizAnswer(selected, buttonEl) {
   
   const isCorrect = selected === currentQuestion.correctChar;
   
+  // 選択された文字/言葉の読み上げテキストを決定
+  const selData = hiraganaData[selected] || { word: selected };
+  const selectedPronounce = (currentQuestion.type === 2 && selData.word !== '') 
+    ? (selData.pronounce || selData.word)
+    : selected;
+
   if (isCorrect) {
     buttonEl.classList.add('correct');
     playSuccessChime();
@@ -1077,9 +1203,18 @@ function handleQuizAnswer(selected, buttonEl) {
       btn.disabled = true;
     });
     
-    speak(voicePraise, () => {
-      // 少し待ってから次のクイズへ
-      setTimeout(startNewQuiz, 1000);
+    // まず選択した答えを発音してから、正解ボイスへ
+    speak(selectedPronounce, () => {
+      setTimeout(() => {
+        speak(voicePraise, () => {
+          // 30問クリア判定
+          if (quizScore > 0 && quizScore % 30 === 0) {
+            setTimeout(showQuizBreak, 800);
+          } else {
+            setTimeout(startNewQuiz, 1000);
+          }
+        });
+      }, 300);
     });
   } else {
     buttonEl.classList.add('wrong');
@@ -1092,11 +1227,25 @@ function handleQuizAnswer(selected, buttonEl) {
     // 不正解ボイス（優しく促す）
     const tries = ['惜しい！もう一回！', '違うのを押してみてね！', '頑張って！どれかな？'];
     const voiceTry = tries[Math.floor(Math.random() * tries.length)];
-    speak(voiceTry);
+    
+    // まず選択した答えを発音してから、不正解ボイスへ
+    speak(selectedPronounce, () => {
+      setTimeout(() => {
+        speak(voiceTry);
+      }, 300);
+    });
     
     // 間違えたボタンは半透明にして非活性化（再選択は可能）
     buttonEl.style.opacity = 0.5;
   }
+}
+
+// クイズ休憩画面の表示
+function showQuizBreak() {
+  const overlay = document.getElementById('quiz-break-overlay');
+  overlay.classList.remove('hidden');
+  
+  speak("すごい！30問正解！大変よくできました！少しお茶を飲んで、一息つこうね！");
 }
 
 // ストリーク数表示の星マーク

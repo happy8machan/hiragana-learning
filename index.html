@@ -21,6 +21,35 @@
 </head>
 <body>
 
+  <!-- パスワード認証画面 -->
+  <div id="password-overlay" class="password-overlay">
+    <div class="password-card">
+      <h2 class="password-title">🔒 ひみつの ばんごう</h2>
+      <p class="password-subtitle">「0210」と おしてね</p>
+      <div class="password-display" id="password-display">
+        <span class="password-dot"></span>
+        <span class="password-dot"></span>
+        <span class="password-dot"></span>
+        <span class="password-dot"></span>
+      </div>
+      <div class="password-keypad">
+        <button class="btn-key" data-val="1">1</button>
+        <button class="btn-key" data-val="2">2</button>
+        <button class="btn-key" data-val="3">3</button>
+        <button class="btn-key" data-val="4">4</button>
+        <button class="btn-key" data-val="5">5</button>
+        <button class="btn-key" data-val="6">6</button>
+        <button class="btn-key" data-val="7">7</button>
+        <button class="btn-key" data-val="8">8</button>
+        <button class="btn-key" data-val="9">9</button>
+        <button class="btn-key btn-clear" data-val="clear">けす</button>
+        <button class="btn-key" data-val="0">0</button>
+        <button class="btn-key btn-ok" data-val="ok">OK</button>
+      </div>
+      <div class="password-error hidden" id="password-error">ばんごうが ちがうよ！もういちど おしてね</div>
+    </div>
+  </div>
+
   <!-- 音声合成の初期化を促すスタート画面（ブラウザの自動再生ポリシー対策） -->
   <div id="start-overlay" class="start-overlay">
     <div class="start-card">
@@ -131,6 +160,14 @@
               <span id="quiz-flower-count" class="flower-count">0</span>
               <span class="flower-emoji">🌸</span>
             </div>
+            <!-- 問題表示トグルスイッチを追加 -->
+            <div class="quiz-toggle-wrapper">
+              <label class="toggle-switch">
+                <input type="checkbox" id="chk-show-question" checked>
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">もじを見せる</span>
+              </label>
+            </div>
             <div class="quiz-streak">
               <span id="quiz-streak-stars"></span>
             </div>
@@ -186,6 +223,17 @@
         <div class="celebration-char" id="celebration-char-display">あ</div>
         <div class="celebration-badge">💮 はなまる！</div>
         <button id="btn-celebration-close" class="btn-celebration-close">つぎへ すすむ 🚀</button>
+      </div>
+    </div>
+
+    <!-- クイズ30問ごとの休憩用全画面オーバーレイ -->
+    <div id="quiz-break-overlay" class="celebration-overlay hidden">
+      <div class="celebration-card">
+        <div class="celebration-stars">🍵✨🍭✨🍵</div>
+        <div class="celebration-title">すごい！30もん せいかい！</div>
+        <div class="celebration-mascot" style="font-size: 5rem;">😊☕🍰</div>
+        <p class="celebration-subtitle" style="font-size: 1.3rem; margin: 15px 0; color: #475569;">すこし おやすみ しようね。<br>お茶をのんだら、「つづける」ボタンをおしてね。</p>
+        <button id="btn-quiz-break-continue" class="btn-celebration-close">つづける 🚀</button>
       </div>
     </div>
 

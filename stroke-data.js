@@ -30,9 +30,9 @@ const hiraganaData = {
     ]
   },
   "え": {
-    word: "えんぴつ",
-    emoji: "✏️",
-    pronounce: "鉛筆",
+    word: "えき",
+    image: "images/eki.png",
+    pronounce: "駅",
     strokes: [
       [[45, 20], [55, 25]], // 1画目: 点
       [[25, 45], [75, 45], [35, 80], [55, 68], [75, 75], [80, 85]] // 2画目: 連続
@@ -49,9 +49,9 @@ const hiraganaData = {
     ]
   },
   "か": {
-    word: "かえる",
-    emoji: "🐸",
-    pronounce: "カエル",
+    word: "かなた",
+    image: "images/kanata.png",
+    pronounce: "カナタ",
     strokes: [
       [[30, 30], [65, 30], [70, 45], [60, 75], [50, 80], [45, 75]], // 1画目: 横から縦・はね
       [[45, 20], [40, 70]], // 2画目: 縦
@@ -88,18 +88,18 @@ const hiraganaData = {
     ]
   },
   "こ": {
-    word: "こあら",
-    emoji: "🐨",
-    pronounce: "コアラ",
+    word: "ことは",
+    image: "images/kotoha.png",
+    pronounce: "コトハ",
     strokes: [
       [[30, 35], [70, 35], [65, 45]], // 1画目: 上横はね
       [[30, 70], [50, 73], [70, 68]] // 2画目: 下横
     ]
   },
   "さ": {
-    word: "さかな",
-    emoji: "🐟",
-    pronounce: "魚",
+    word: "さんふらわあ",
+    image: "images/sunflower.png",
+    pronounce: "サンフラワー",
     strokes: [
       [[30, 35], [70, 35]], // 1画目: 横
       [[50, 18], [42, 70], [48, 75]], // 2画目: 縦はね
@@ -134,9 +134,9 @@ const hiraganaData = {
     ]
   },
   "そ": {
-    word: "そら",
-    emoji: "☁️",
-    pronounce: "空",
+    word: "そふとくりーむ",
+    image: "images/softcream.png",
+    pronounce: "ソフトクリーム",
     strokes: [
       [[30, 25], [70, 25], [35, 55], [70, 55], [70, 70], [50, 85], [30, 75]] // 1画目: 連続ジグザグ
     ]
@@ -162,9 +162,9 @@ const hiraganaData = {
     ]
   },
   "つ": {
-    word: "つくえ",
-    emoji: "🪑",
-    pronounce: "机",
+    word: "つき",
+    image: "images/tsuki.png",
+    pronounce: "月",
     strokes: [
       [[28, 38], [72, 38], [72, 60], [48, 82], [30, 75]] // 1画目: 大きなカーブ
     ]
@@ -226,17 +226,17 @@ const hiraganaData = {
     ]
   },
   "の": {
-    word: "のりもの",
-    emoji: "🚌",
-    pronounce: "乗り物",
+    word: "のり",
+    image: "images/nori.png",
+    pronounce: "海苔",
     strokes: [
       [[52, 38], [42, 60], [48, 75], [65, 75], [75, 60], [75, 45], [62, 32], [45, 38], [35, 55], [40, 75]] // 1画目: 円ループ
     ]
   },
   "は": {
-    word: "はな",
-    emoji: "🌸",
-    pronounce: "花",
+    word: "はなび",
+    image: "images/hanabi.png",
+    pronounce: "花火",
     strokes: [
       [[28, 20], [28, 75], [34, 80], [38, 74]], // 1画目: 左縦はね
       [[45, 38], [75, 38]], // 2画目: 横
@@ -252,9 +252,9 @@ const hiraganaData = {
     ]
   },
   "ふ": {
-    word: "ふうせん",
-    emoji: "🎈",
-    pronounce: "風船",
+    word: "ふみきり",
+    image: "images/fumikiri.png",
+    pronounce: "踏切",
     strokes: [
       [[50, 20], [52, 32]], // 1画目: 上点
       [[48, 48], [42, 68], [50, 78], [58, 68]], // 2画目: 中央ループ
@@ -271,9 +271,9 @@ const hiraganaData = {
     ]
   },
   "ほ": {
-    word: "ほし",
-    emoji: "⭐",
-    pronounce: "星",
+    word: "ほいくえん",
+    image: "images/hoikuen.png",
+    pronounce: "保育園",
     strokes: [
       [[25, 20], [25, 75], [31, 80], [35, 74]], // 1画目: 左縦はね
       [[42, 32], [72, 32]], // 2画目: 上横
@@ -282,9 +282,9 @@ const hiraganaData = {
     ]
   },
   "ま": {
-    word: "まいく",
-    emoji: "🎤",
-    pronounce: "マイク",
+    word: "まぐろ",
+    image: "images/maguro.png",
+    pronounce: "マグロ",
     strokes: [
       [[30, 32], [70, 32]], // 1画目: 上横
       [[30, 48], [70, 48]], // 2画目: 下横
@@ -330,9 +330,9 @@ const hiraganaData = {
     ]
   },
   "や": {
-    word: "やさい",
-    emoji: "🥗",
-    pronounce: "野菜",
+    word: "やま",
+    image: "images/yama.png",
+    pronounce: "山",
     strokes: [
       [[32, 40], [65, 30], [70, 42], [62, 50], [50, 82]], // 1画目: フック
       [[62, 25], [55, 38]], // 2画目: 斜め短点
@@ -410,9 +410,9 @@ const hiraganaData = {
     ]
   },
   "を": {
-    word: "ほんをよむ",
-    emoji: "📖",
-    pronounce: "本を読む",
+    word: "",
+    emoji: "❌",
+    pronounce: "を",
     strokes: [
       [[25, 35], [75, 35]], // 1画目: 横
       [[50, 18], [35, 70], [65, 70]], // 2画目: 縦斜め・横
@@ -420,9 +420,9 @@ const hiraganaData = {
     ]
   },
   "ん": {
-    word: "ぱんだ",
-    emoji: "🐼",
-    pronounce: "パンダ",
+    word: "",
+    emoji: "❌",
+    pronounce: "ん",
     strokes: [
       [[25, 30], [25, 75], [55, 35], [42, 80], [68, 80], [80, 68]] // 1画目: 一筆書き
     ]

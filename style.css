@@ -1113,3 +1113,239 @@ body {
     height: 60px;
   }
 }
+
+/* ==================================================
+  パスワードロック画面のスタイル
+================================================== */
+.password-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, #e0f2fe 0%, #bae6fd 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* 最前面に表示 */
+}
+
+.password-card {
+  background: white;
+  padding: 30px;
+  border-radius: 30px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 320px;
+  border: 8px solid #fbcfe8; /* 可愛いピンクの縁 */
+  animation: floatCard 4s ease-in-out infinite;
+}
+
+.password-title {
+  font-family: var(--font-kids);
+  font-size: 1.6rem;
+  color: #db2777; /* ピンク */
+  margin-bottom: 5px;
+}
+
+.password-subtitle {
+  font-size: 1.1rem;
+  color: #4b5563;
+  margin-bottom: 20px;
+}
+
+.password-display {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  background: #f3f4f6;
+  padding: 15px;
+  border-radius: 20px;
+  border: 3px inset #e5e7eb;
+}
+
+.password-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #d1d5db;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.password-dot.filled {
+  background: #db2777;
+  transform: scale(1.2);
+  box-shadow: 0 0 8px rgba(219, 39, 119, 0.4);
+}
+
+.password-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.btn-key {
+  font-family: var(--font-kids);
+  font-size: 1.6rem;
+  font-weight: 700;
+  background: #f1f5f9;
+  border: none;
+  padding: 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 0px #cbd5e1;
+  transition: all 0.05s;
+  color: #334155;
+  aspect-ratio: 1 / 1;
+}
+
+.btn-key:hover {
+  transform: translateY(1px);
+  box-shadow: 0 3px 0px #cbd5e1;
+}
+
+.btn-key:active {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
+.btn-key.btn-clear {
+  font-size: 1.1rem;
+  background: #fee2e2;
+  box-shadow: 0 4px 0px #fca5a5;
+  color: #ef4444;
+}
+
+.btn-key.btn-clear:hover {
+  box-shadow: 0 3px 0px #fca5a5;
+}
+
+.btn-key.btn-ok {
+  font-size: 1.1rem;
+  background: #dcfce7;
+  box-shadow: 0 4px 0px #86efac;
+  color: #16a34a;
+}
+
+.btn-key.btn-ok:hover {
+  box-shadow: 0 3px 0px #86efac;
+}
+
+.password-error {
+  color: #ef4444;
+  font-size: 0.95rem;
+  margin-top: 10px;
+  font-weight: 700;
+  animation: shake 0.4s ease;
+}
+
+/* ==================================================
+  クイズ問題非表示トグルスイッチのスタイル
+================================================== */
+.quiz-toggle-wrapper {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.toggle-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  background-color: #cbd5e1;
+  border-radius: 28px;
+  transition: 0.3s;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--color-primary);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(24px);
+}
+
+.toggle-label {
+  font-family: var(--font-kids);
+  margin-left: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #475569;
+  user-select: none;
+}
+
+/* ==================================================
+  タッチ操作対応と画像バインド拡張
+================================================== */
+#trace-canvas {
+  touch-action: none; /* スマホやタブレットでのデフォルトスクロールを無効化 */
+}
+
+/* イラスト画像挿入時の共通スタイル */
+.card-emoji img,
+.option-emoji img,
+.modal-emoji img,
+.info-emoji img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.card-emoji img {
+  max-width: 50px;
+  max-height: 50px;
+  display: block;
+  margin: 0 auto;
+}
+
+.option-emoji img {
+  max-width: 90px;
+  max-height: 90px;
+  display: block;
+  margin: 0 auto;
+}
+
+.modal-emoji img {
+  max-width: 120px;
+  max-height: 120px;
+  display: block;
+  margin: 0 auto;
+}
+
+.info-emoji img {
+  max-width: 44px;
+  max-height: 44px;
+  display: inline-block;
+  vertical-align: middle;
+}
